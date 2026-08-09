@@ -28,10 +28,10 @@ app.listen(PORT, () => {
 
 app.use(cors({
   origin: [
-  'http://localhost:5173',
-  'https://realestate-client-one.vercel.app/api',
-  'https://realestate-client-git-main-subhans-projects-a190d2f1.vercel.app/api',
-],
+    'http://localhost:5173',
+    'https://realestate-client-one.vercel.app',
+    'https://realestate-client-git-main-subhans-projects-a190d2f1.vercel.app',
+  ],
   credentials: true
 }));
 
