@@ -27,7 +27,7 @@ app.listen(PORT, () => {
 });
 
 app.use(cors({
-  origin: 'https://realestate-client-one.vercel.app',
+  origin: 'https://realestate-client-one.vercel.app' || 'http://localhost:5173',
   credentials: true
 }));
 
