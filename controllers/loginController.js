@@ -24,7 +24,7 @@ export const loginController = async (req, res) => {
         role: existingUser.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" },
+      { expiresIn: "7d" },
     );
 
     return res.status(200).json({

@@ -28,7 +28,7 @@ export const signupController = async (req, res) => {
         role: newUser.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" },
+      { expiresIn: "7d" },
     );
 
     return res.status(201).json({
