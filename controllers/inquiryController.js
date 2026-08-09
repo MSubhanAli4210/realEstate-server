@@ -111,3 +111,40 @@ export const deleteInquiry = async (req, res) => {
     });
   }
 };
+
+export const respondToInquiry = async (req, res) => {
+  try {
+    const { response } = req.body;
+    const inquiry = await Inquiry.findById(req.params.id).populate('listing');
+
+    if (!inquiry) {
+      return res.status(404).json({
+        message: "Inquiry not found",
+      });
+    }
+
+    if (inquiry.listing.owner.toString() !== req.userId && req.userRole !== "admin") {
+      return res.status(403).json({
+        message: "You are not authorized to respond to this inquiry",
+      });
+    }
+
+    inquiry.response = response;
+    inquiry.status = 'responded';
+    await inquiry.save();
+
+    return res.status(200).json({
+      message: "Response sent successfully",
+      inquiry,
+    });
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      const firstError = Object.values(err.errors)[0].message;
+      return res.status(400).json({ message: firstError });
+    }
+    console.error(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};

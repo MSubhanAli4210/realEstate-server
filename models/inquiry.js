@@ -19,6 +19,12 @@ const inquirySchema = new Schema(
       minlength: 5,
       maxlength: 1000,
     },
+    response: {
+      type: String,
+      trim: true,
+      maxlength: 1000,
+      default: '',
+    },
     status: {
       type: String,
       enum: ['pending', 'responded'],
