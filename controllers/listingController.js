@@ -18,6 +18,10 @@ export const createListing = async (req, res) => {
       listing: newListing,
     });
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const firstError = Object.values(err.errors)[0].message;
+      return res.status(400).json({ message: firstError });
+    }
     console.error(err);
     return res.status(500).json({
       message: "Internal Server Error",
@@ -91,6 +95,10 @@ export const updateListing = async (req, res) => {
       listing: updatedListing,
     });
   } catch (err) {
+    if (err.name === 'ValidationError') {
+      const firstError = Object.values(err.errors)[0].message;
+      return res.status(400).json({ message: firstError });
+    }
     console.error(err);
     return res.status(500).json({
       message: "Internal Server Error",
