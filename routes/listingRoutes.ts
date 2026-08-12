@@ -17,3 +17,4 @@ router.put("/:id", protect, updateListing);
 router.delete("/:id", protect, deleteListing);
 
 export default router;
+

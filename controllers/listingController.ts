@@ -1,6 +1,7 @@
+import { Request, Response } from "express";
 import Listing from "../models/listing.js";
 
-export const createListing = async (req, res) => {
+export const createListing = async (req: Request, res: Response) => {
   try {
     const { title, location, price, bedrooms, images } = req.body;
 
@@ -17,65 +18,55 @@ export const createListing = async (req, res) => {
       message: "Listing created successfully",
       listing: newListing,
     });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      const firstError = Object.values(err.errors)[0].message;
-      return res.status(400).json({ message: firstError });
+  } catch (err: any) {
+    if (err.name === "ValidationError") {
+      const firstError = Object.values(err.errors)[0] as { message: string };
+      return res.status(400).json({ message: firstError.message });
     }
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const getListings = async (req, res) => {
+export const getListings = async (req: Request, res: Response) => {
   try {
     const listings = await Listing.find().populate("owner", "username email");
     return res.status(200).json({
       message: "Listings retrieved successfully",
       listings,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const getListingById = async (req, res) => {
+export const getListingById = async (req: Request, res: Response) => {
   try {
     const listing = await Listing.findById(req.params.id).populate(
       "owner",
       "username email"
     );
     if (!listing) {
-      return res.status(404).json({
-        message: "Listing not found",
-      });
+      return res.status(404).json({ message: "Listing not found" });
     }
     return res.status(200).json({
       message: "Listing retrieved successfully",
       listing,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const updateListing = async (req, res) => {
+export const updateListing = async (req: Request, res: Response) => {
   try {
     const { title, location, price, bedrooms, images } = req.body;
     const listing = await Listing.findById(req.params.id);
 
     if (!listing) {
-      return res.status(404).json({
-        message: "Listing not found",
-      });
+      return res.status(404).json({ message: "Listing not found" });
     }
 
     if (listing.owner.toString() !== req.userId && req.userRole !== "admin") {
@@ -94,26 +85,22 @@ export const updateListing = async (req, res) => {
       message: "Listing updated successfully",
       listing: updatedListing,
     });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      const firstError = Object.values(err.errors)[0].message;
-      return res.status(400).json({ message: firstError });
+  } catch (err: any) {
+    if (err.name === "ValidationError") {
+      const firstError = Object.values(err.errors)[0] as { message: string };
+      return res.status(400).json({ message: firstError.message });
     }
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const deleteListing = async (req, res) => {
+export const deleteListing = async (req: Request, res: Response) => {
   try {
     const listing = await Listing.findById(req.params.id);
 
     if (!listing) {
-      return res.status(404).json({
-        message: "Listing not found",
-      });
+      return res.status(404).json({ message: "Listing not found" });
     }
 
     if (listing.owner.toString() !== req.userId && req.userRole !== "admin") {
@@ -124,13 +111,9 @@ export const deleteListing = async (req, res) => {
 
     await Listing.findByIdAndDelete(req.params.id);
 
-    return res.status(200).json({
-      message: "Listing deleted successfully",
-    });
-  } catch (err) {
+    return res.status(200).json({ message: "Listing deleted successfully" });
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

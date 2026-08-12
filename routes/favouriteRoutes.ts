@@ -13,3 +13,4 @@ router.get("/", protect, getMyFavourites);
 router.delete("/:id", protect, removeFavourite);
 
 export default router;
+

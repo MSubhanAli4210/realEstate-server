@@ -17,3 +17,5 @@ router.delete("/:id", protect, deleteInquiry);
 router.post("/:id/respond", protect, respondToInquiry);
 
 export default router;
+
+

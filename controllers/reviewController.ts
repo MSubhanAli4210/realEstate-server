@@ -1,15 +1,14 @@
+import { Request, Response } from "express";
 import Review from "../models/review.js";
 import Listing from "../models/listing.js";
 
-export const createReview = async (req, res) => {
+export const createReview = async (req: Request, res: Response) => {
   try {
     const { listingId, rating, comment } = req.body;
 
     const listing = await Listing.findById(listingId);
     if (!listing) {
-      return res.status(404).json({
-        message: "Listing not found",
-      });
+      return res.status(404).json({ message: "Listing not found" });
     }
 
     const review = await Review.create({
@@ -23,20 +22,22 @@ export const createReview = async (req, res) => {
       message: "Review created successfully",
       review,
     });
-  } catch (err) {
+  } catch (err: any) {
     if (err.code === 11000) {
       return res.status(409).json({
         message: "You already reviewed this listing",
       });
     }
+    if (err.name === "ValidationError") {
+      const firstError = Object.values(err.errors)[0] as { message: string };
+      return res.status(400).json({ message: firstError.message });
+    }
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const getReviewsForListing = async (req, res) => {
+export const getReviewsForListing = async (req: Request, res: Response) => {
   try {
     const reviews = await Review.find({
       listing: req.params.listingId,
@@ -46,26 +47,25 @@ export const getReviewsForListing = async (req, res) => {
       message: "Reviews retrieved successfully",
       reviews,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const updateReview = async (req, res) => {
+export const updateReview = async (req: Request, res: Response) => {
   try {
     const { rating, comment } = req.body;
     const review = await Review.findById(req.params.id);
 
     if (!review) {
-      return res.status(404).json({
-        message: "Review not found",
-      });
+      return res.status(404).json({ message: "Review not found" });
     }
 
-    if (review.reviewer.toString() !== req.userId && req.userRole !== "admin") {
+    if (
+      review.reviewer.toString() !== req.userId &&
+      req.userRole !== "admin"
+    ) {
       return res.status(403).json({
         message: "You are not authorized to update this review",
       });
@@ -81,25 +81,24 @@ export const updateReview = async (req, res) => {
       message: "Review updated successfully",
       review: updatedReview,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export const deleteReview = async (req, res) => {
+export const deleteReview = async (req: Request, res: Response) => {
   try {
     const review = await Review.findById(req.params.id);
 
     if (!review) {
-      return res.status(404).json({
-        message: "Review not found",
-      });
+      return res.status(404).json({ message: "Review not found" });
     }
 
-    if (review.reviewer.toString() !== req.userId && req.userRole !== "admin") {
+    if (
+      review.reviewer.toString() !== req.userId &&
+      req.userRole !== "admin"
+    ) {
       return res.status(403).json({
         message: "You are not authorized to delete this review",
       });
@@ -107,13 +106,9 @@ export const deleteReview = async (req, res) => {
 
     await Review.findByIdAndDelete(req.params.id);
 
-    return res.status(200).json({
-      message: "Review deleted successfully",
-    });
-  } catch (err) {
+    return res.status(200).json({ message: "Review deleted successfully" });
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-    });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-};
+}; 

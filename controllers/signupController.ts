@@ -1,7 +1,8 @@
-import User from "../models/user.js";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 
-export const signupController = async (req, res) => {
+export const signupController = async (req: Request, res: Response) => {
   try {
     const { email, password, username } = req.body;
 
@@ -27,8 +28,8 @@ export const signupController = async (req, res) => {
         username: newUser.username,
         role: newUser.role,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "7d" }
     );
 
     return res.status(201).json({
@@ -40,7 +41,7 @@ export const signupController = async (req, res) => {
       },
       token,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     return res.status(500).json({
       message: "Internal Server Error",

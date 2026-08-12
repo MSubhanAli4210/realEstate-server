@@ -1,6 +1,14 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model, Types } from 'mongoose';
 
-const inquirySchema = new Schema(
+export interface IInquiry extends Document {
+  listing: Types.ObjectId;
+  sender: Types.ObjectId;
+  message: string;
+  response: string;
+  status: 'pending' | 'responded';
+}
+
+const inquirySchema = new Schema<IInquiry>(
   {
     listing: {
       type: Schema.Types.ObjectId,
@@ -34,6 +42,6 @@ const inquirySchema = new Schema(
   { timestamps: true }
 );
 
-const Inquiry = model('Inquiry', inquirySchema);
+const Inquiry: Model<IInquiry> = mongoose.model<IInquiry>('Inquiry', inquirySchema);
 
 export default Inquiry;

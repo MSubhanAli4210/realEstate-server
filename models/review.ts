@@ -1,6 +1,13 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model, Types } from 'mongoose';
 
-const reviewSchema = new Schema(
+export interface IReview extends Document {
+  listing: Types.ObjectId;
+  reviewer: Types.ObjectId;
+  rating: number;
+  comment: string;
+}
+
+const reviewSchema = new Schema<IReview>(
   {
     listing: {
       type: Schema.Types.ObjectId,
@@ -27,9 +34,8 @@ const reviewSchema = new Schema(
   { timestamps: true }
 );
 
-// One review per user per listing
 reviewSchema.index({ listing: 1, reviewer: 1 }, { unique: true });
 
-const Review = model('Review', reviewSchema);
+const Review: Model<IReview> = mongoose.model<IReview>('Review', reviewSchema);
 
 export default Review;

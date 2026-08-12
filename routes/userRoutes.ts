@@ -23,3 +23,4 @@ router.get("/:id", protect, isAdmin, getUserById);
 router.delete("/:id", protect, isAdmin, deleteUser);
 
 export default router;
+

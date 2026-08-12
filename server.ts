@@ -16,9 +16,14 @@ const app = express();
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  throw new Error("MONGODB_URI is not defined in .env");
+}
+mongoose
+  .connect(mongoUri)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 const PORT = process.env.PORT || 8080;
 
@@ -45,3 +50,4 @@ app.use('/api/listings', listingRoutes);
 app.use('/api/favourites', favouriteRoutes);
 app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/reviews', reviewRoutes);
+

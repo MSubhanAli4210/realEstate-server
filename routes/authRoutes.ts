@@ -9,3 +9,4 @@ router.post('/login', loginCredentialsCheck, loginController);
 router.post('/register', signupCredentialsCheck, signupController);
 
 export default router;
+

@@ -1,6 +1,11 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Model, Types } from 'mongoose';
 
-const favouriteSchema = new Schema(
+export interface IFavourite extends Document {
+  user: Types.ObjectId;
+  listing: Types.ObjectId;
+}
+
+const favouriteSchema = new Schema<IFavourite>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -16,9 +21,8 @@ const favouriteSchema = new Schema(
   { timestamps: true }
 );
 
-// Prevent the same user from favouriting the same listing twice
 favouriteSchema.index({ user: 1, listing: 1 }, { unique: true });
 
-const Favourite = model('Favourite', favouriteSchema);
+const Favourite: Model<IFavourite> = mongoose.model<IFavourite>('Favourite', favouriteSchema);
 
 export default Favourite;
