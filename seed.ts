@@ -6,9 +6,14 @@ import Listing from './models/listing.js';
 
 dotenv.config();
 
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  throw new Error("MONGODB_URI is not defined in .env");
+}
+
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(mongoUri);
     console.log('MongoDB connected for seeding');
 
     // Clear existing data (optional — comment out if you want to keep existing data)
