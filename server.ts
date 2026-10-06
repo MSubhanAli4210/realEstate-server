@@ -34,7 +34,7 @@ app.listen(PORT, () => {
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://realestate-client-alpha.vercel.app/',
+    'https://realestate-client-alpha.vercel.app',
     'https://vercel.com/subhans-projects-a190d2f1/realestate-client/CxFz3bmX5HdnZ7t1JCbaNGJVWVah',
   ],
   credentials: true
